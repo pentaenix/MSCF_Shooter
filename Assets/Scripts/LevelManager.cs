@@ -32,11 +32,10 @@ public class LevelManager : MonoBehaviour {
 
 	//Level manager variables
 	private int levelLayout;
-	[SerializeField] TextAsset LevelDataFile;
 	[HideInInspector] public List<int[]> LevelData = new List<int[]>();
 	private int currentLevel = 0;
 	#endregion
-	
+
 	void Start() {
 		//Read metadata
 		ReadLayout();
@@ -65,16 +64,20 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	void ReadLayout() {
-		byte[] layoutByteArray = (File.ReadAllBytes(Application.dataPath + "/Levels/Layout.metadata"));
-		if (layoutByteArray.Length > 0) {
-			levelLayout = Convert.ToInt32(layoutByteArray[0]);
+		if (File.Exists(Application.dataPath + "/Levels/Layout.metadata")) {
+			byte[] layoutByteArray = (File.ReadAllBytes(Application.dataPath + "/Levels/Layout.metadata"));
+			if (layoutByteArray.Length > 0) {
+				levelLayout = Convert.ToInt32(layoutByteArray[0]);
+			} else {
+				LayoutPrintError();
+			}
+			//User has modified the file and inserted its own numbers
+			if (levelLayout == 49) levelLayout = 1;
+			else if (levelLayout == 50) levelLayout = 2;
+			else if (levelLayout > 2 && levelLayout < 1) LayoutPrintError();
 		} else {
 			LayoutPrintError();
 		}
-		//User has modified the file and inserted its own numbers
-		if (levelLayout == 49) levelLayout = 1;
-		else if (levelLayout == 50) levelLayout = 2;
-		else if (levelLayout > 2 && levelLayout < 1) LayoutPrintError();
 	}
 
 	void LayoutPrintError() {
@@ -83,7 +86,12 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	void ReadLevelFileData() {
-		string[] input = LevelDataFile.text.Split("\n");
+		if (!File.Exists(Application.dataPath + "/Levels/LevelData.txt")) {
+			DefaultLevelLayout();
+		}
+
+		string LevelDataFile = File.ReadAllText(Application.dataPath + "/Levels/LevelData.txt");
+		string[] input = LevelDataFile.Split("\n");
 
 		if (input.Length > 0) {
 			for (int i = 0; i < input.Length; i++) {
@@ -131,7 +139,7 @@ public class LevelManager : MonoBehaviour {
 					foreach (EnemyBehavior enemy in activeEnemies) {
 						if (!enemy.isActive) {
 							EnemiesInScene.Add(enemy);
-							enemy.SpawnEnemy(pos, LevelData[currentLevel][i],levelSpeedBoost);
+							enemy.SpawnEnemy(pos, LevelData[currentLevel][i], levelSpeedBoost);
 							break;
 						}
 					}
@@ -142,6 +150,20 @@ public class LevelManager : MonoBehaviour {
 			GameOverText.text = "WELL DONE!\nYOU FINISHED\nTHE GAME";
 		}
 	}
+
+	private void DefaultLevelLayout() {
+		//This function is meant to protect the app from the user deleting levelData.txt, these strings can be replaced with the final designed levels from the LevelData.txt file
+		File.WriteAllText(Application.dataPath + "/Levels/LevelData.txt",
+			"0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1" + "\n" +
+			"0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,2,0,1,0,1,0,1,1,1,1,1,1" + "\n" +
+			"0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,2,0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1" + "\n" +
+			"0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,3,0,0,0,0,0,0,2,2,2,2,2,1,1,1,1,1" + "\n" +
+			"0,0,0,0,0,0,0,0,0,0,3,0,3,0,3,0,3,0,3,0,3,0,3,0,3,2,2,2,2,2,2,2,2,2,2" + "\n" +
+			"3,3,0,3,3,2,0,3,0,2,3,3,0,3,3,2,0,3,0,2,3,3,0,3,3,2,0,3,0,2,3,3,0,3,3" + "\n" +
+			"3,3,3,3,3,3,2,3,2,3,3,2,3,2,3,3,3,3,3,3,3,2,2,2,3,2,3,3,3,2,3,3,3,3,3"
+			);
+	}
+
 
 
 	public void ResetScene() {

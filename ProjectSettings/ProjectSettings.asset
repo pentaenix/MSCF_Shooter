@@ -12,7 +12,7 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
+  companyName: MateoSaldivar
   productName: MSCF_Shooter
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
@@ -46,8 +46,8 @@ PlayerSettings:
     duration: 4
   m_VirtualRealitySplashScreen: {fileID: 2800000, guid: 852a6f09bd11ab94da47079cf292d8b5, type: 3}
   m_HolographicTrackingLossScreen: {fileID: 0}
-  defaultScreenWidth: 600
-  defaultScreenHeight: 960
+  defaultScreenWidth: 400
+  defaultScreenHeight: 600
   defaultScreenWidthWeb: 960
   defaultScreenHeightWeb: 600
   m_StereoRenderingPath: 0
@@ -79,7 +79,7 @@ PlayerSettings:
   androidMinimumWindowHeight: 300
   androidFullscreenMode: 1
   defaultIsNativeResolution: 1
-  macRetinaSupport: 1
+  macRetinaSupport: 0
   runInBackground: 0
   captureSingleScreen: 0
   muteOtherAudioSources: 0
@@ -137,7 +137,7 @@ PlayerSettings:
     5:4: 0
     16:10: 0
     16:9: 0
-    Others: 0
+    Others: 1
   bundleVersion: 1.0
   preloadedAssets:
   - {fileID: 11400000, guid: 2d19a148602e80947b2e52ecb0bded8f, type: 2}
@@ -666,7 +666,9 @@ PlayerSettings:
   webGLLinkerTarget: 1
   webGLThreadsSupport: 0
   webGLDecompressionFallback: 0
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    Android: 
+    Server: 
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}
